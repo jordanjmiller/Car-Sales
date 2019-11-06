@@ -1,4 +1,4 @@
-import {ADD_MOVIE, BUY_ITEM, REMOVE_FEATURE} from '../actions'
+import { ADD_FEATURE, REMOVE_FEATURE} from '../actions/actions.js'
 
 
 const initialState = {
@@ -20,5 +20,28 @@ const initialState = {
 
 
 export const reducer= (state = initialState, action) => {
-    return state;
+    console.log('reducer firing: ', action);
+    switch(action.type) {
+        case ADD_FEATURE:
+            console.log(action.payload)
+            
+          return {
+            ...state,
+            additionalPrice: (state.additionalPrice + action.payload.price),
+            car: {...state.car, features: [...state.car.features, action.payload]},
+            additionalFeatures: state.additionalFeatures.filter((feature) => {
+                return feature.id !== action.payload.id;
+            })
+          }
+        case REMOVE_FEATURE:
+            console.log('REMOVING FEATURE: ', action.payload);
+            return {
+                ...state,
+                additionalPrice: (state.additionalPrice - action.payload.price),
+                car: {...state.car, features: state.car.features.filter(feature => {
+                    return feature.id !== action.payload.id;})},
+                additionalFeatures: [...state.additionalFeatures, action.payload]
+            }
+        default: return state;
   }
+}
